@@ -2,7 +2,11 @@
 title: "Recuperacionnde Valores en el Indicador NASDAQ"
 output: html_notebook
 ---
+La base de datos extraída de Yahoo! Finance, posee los siguientes atributos para cada uno de los días: valor de apertura, valor de cierre, valor más alto, 
+valor más bajo, volumen transado y valor de cierre ajustado. Para este trabajo, solo se utilizó el valor más bajo al que se transó la acción en el día.
+
 1. SETUP WORKING ENVIRONMENT
+Primero se cargan las librerías necesarias para que funcione el código:
 ```{r}
 install.packages("tidyverse")
 install.packages("readxl")
@@ -21,6 +25,14 @@ setwd("C:/Users/nafa/Documents/RStudio/DataScienceProject/Dataset")
 
 
 2. LOAD DATASET
+Para el modelo ARIMAX se escogió como variable exógena el PIB de EE.UU, los datos se obtuvieron de la  Oficina de Análisis Económico (BEA), del Departamento de 
+Comercio de Estados Unidos. Este dato estaba calculado por trimestre y nuestros datos de los precios de la acción están diarios, por lo tanto, en un archivo excel se 
+creó una columna nueva, donde se le asignó de acuerdo a la fecha el pib a cada dato diario.
+
+Para poder comparar distintos periodos de tiempo, se cargan las bases de datos para los períodos 2009 a 2018, 2019 a 2023 (a la fecha de 10 de Junio) y la base de 
+datos completa correspondiente a los años 2003 a 2023. El motivo detrás de esto es comparar el efecto de la pandemia 2020, frente a un periodo de tiempo sin grandes 
+acontecimientos externos, como lo es el periodo del año 2009 a 2018.
+
 ```{r}
 #2009-2018
 df <- read_excel("ONEQ_Data2009-2018_PIB.xlsx")
@@ -34,9 +46,14 @@ df3 <- read_excel("ONEQ_Data2003-2023_PIB.xlsx")
 
 
 
-3. DATA PRE PROCESSING####
-#2008-2018
+3. DATA PRE PROCESSING
+Se procede a establecer los formatos necesarios para las futuras funciones, para el atributo con las fechas se le aplica formato “Date”.
+
+Luego se genera una serie de tiempo guardada en la variable “oneq” para los valores en bolsa del oneq y en la variable “pib” para el pib de Estados Unidos.
+
+Esto se reitera para los diferentes intervalos de tiempo definidos previamente.
 ```{r}
+#2008-2018
 df$Date <- as.Date(df$Date)
 
 oneq <- xts(df$Low, order.by = df$Date)
@@ -45,10 +62,9 @@ oneq$oneq.Low <- oneq$oneq.Low/1000000
 
 pib <- xts(df$PIB, order.by = df$Date)
 names(pib) <- c("pib")
-```
+
 
 #2019-2023
-```{r}
 df2$Date <- as.Date(df2$Date)
 
 oneq2 <- xts(df2$Low, order.by = df2$Date)
@@ -57,10 +73,9 @@ oneq2$oneq.Low <- oneq2$oneq.Low/1000000
 
 pib2 <- xts(df2$PIB, order.by = df2$Date)
 names(pib2) <- c("pib")
-```
+
 
 #2003-2023
-```{r}
 df3$Date <- as.Date(df3$Date)
 
 oneq3 <- xts(df3$Low, order.by = df3$Date)
@@ -95,7 +110,8 @@ model <- auto.arima(train)
 fc <- forecast(model, h=n)               
 ```
 
-Finalmente, se realiza una gráfica del pronóstico agregando la curva de correspondiente al conjunto de prueba con el fin de visualizar y comparar tanto el pronóstico como los datos reales.
+Finalmente, se realiza una gráfica del pronóstico agregando la curva de correspondiente al conjunto de prueba con el fin de visualizar y comparar tanto el pronóstico 
+como los datos reales.
 ```{r}
 autoplot(fc, title = "ARIMAX Forecast ONEQ 2009-2018 with exogenous variable USA GDP") + 
 	autolayer(fc, series = "Forecast") +
