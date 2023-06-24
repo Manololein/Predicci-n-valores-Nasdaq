@@ -13,9 +13,9 @@ output: html_notebook
 	library(tidyverse)
 	```
 Luego se define la ubicación del espacio de trabajo
-	```{r}
-	setwd("C:/Users/nafa/Documents/RStudio/DataScienceProject/Dataset")
-	```
+```{r}
+setwd("C:/Users/nafa/Documents/RStudio/DataScienceProject/Dataset")
+```
 
 
 
