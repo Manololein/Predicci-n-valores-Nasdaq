@@ -75,21 +75,36 @@ names(pib3) <- c("pib")
 
 4. MODELING
 ARIMA forecasting
+Primero se establece el número de datos a ser pronosticados con la variable “n”, en este caso se selecciona a 1/3 de la base de datos.
 ```{r}
 #2009-2018
 n <- as.integer(nrow(oneq)/3)
+```
+
+Luego se establece el conjunto de entrenamiento y el conjunto de prueba. El primero se define tomando los datos desde el inicio de la base de datos “oneq” hasta la
+longitud de la base de datos menos “n”. Para el caso del conjunto de prueba; cuentan los “n” últimos datos de la base de datos “oneq”.
+```{r}
 train <- head(oneq$oneq.Low, length(oneq$oneq.Low)-n)
 test <- tail(oneq$oneq.Low, n)
+```
 
+A continuación se aplica el modelo, para este caso se utiliza la función auto.arima, la cual toma el conjunto de entrenamiento. 
+Entonces, se realiza el pronóstico por medio de la función “forecast”.
+```{r}
 model <- auto.arima(train)            
 fc <- forecast(model, h=n)               
+```
 
+Finalmente, se realiza una gráfica del pronóstico agregando la curva de correspondiente al conjunto de prueba con el fin de visualizar y comparar tanto el pronóstico como los datos reales.
+```{r}
 autoplot(fc, title = "ARIMAX Forecast ONEQ 2009-2018 with exogenous variable USA GDP") + 
-autolayer(fc, series = "Forecast") +
-autolayer(ts(test, start= length(train)), series="Test Data") +
-xlim(0, length(oneq))
+	autolayer(fc, series = "Forecast") +
+	autolayer(ts(test, start= length(train)), series="Test Data") +
+	xlim(0, length(oneq))
+```
 
-
+Esto se lleva a cabo para cada intervalo de tiempo.
+```{r}
 #2019-2023
 n2 <- as.integer(nrow(oneq2)/3)
 train2 <- head(oneq2$oneq.Low, length(oneq2$oneq.Low)-n2)
@@ -99,8 +114,8 @@ model2 <- auto.arima(train2)
 fc2 <- forecast(model2, h=n2)               
 
 autoplot(fc2, main = "ARIMAX Forecast ONEQ 2019-2023 with exogenous variable USA GDP") + 
-autolayer(ts(test2, start= length(train2)), series="Test Data")+
-xlim(0, length(oneq2)) 
+	autolayer(ts(test2, start= length(train2)), series="Test Data")+
+	xlim(0, length(oneq2)) 
 
 
 #2003-2023
@@ -113,8 +128,8 @@ model3 <- auto.arima(train3)
 fc3 <- forecast(model3, h=n3)                
 
 autoplot(fc3, main = "ARIMAX Forecast ONEQ 2003-2023 with exogenous variable USA GDP") + 
-autolayer(ts(test3, start= length(train3)), series="Test Data")+
-xlim(0, length(oneq3)) 
+	autolayer(ts(test3, start= length(train3)), series="Test Data")+
+	xlim(0, length(oneq3)) 
 ```
 
 Para finalizar el modelo de ARIMA, se guardan las variables utilizadas en otras con nombres diferentes, 
@@ -131,6 +146,10 @@ test3_arima <- test3
 
 
 ARIMAX forecasting
+Para el caso de ARIMAX, en las funciones “auto.arima” y “forecast” se les incluye un atributo “xreg” el cual contempla la variable exógena, 
+en ella se asocia la base de datos “pib” que contiene los datos correspondientes al pib de Estados Unidos.
+
+Esto se lleva a cabo para cada intervalo de tiempo.
 ```{r}
 #2009-2018
 n <- as.integer(nrow(oneq)/3)
@@ -142,9 +161,9 @@ model <- auto.arima(train, xreg = pib.xreg$pib)
 fc <- forecast(model, xreg = pib.xreg$pib, h=n)               
 
 autoplot(fc, title = "ARIMAX Forecast ONEQ 2009-2018 with exogenous variable USA GDP") + 
-autolayer(fc, series = "Forecast") +
-autolayer(ts(test, start= length(train)), series="Test Data") +
-xlim(0, length(oneq))
+	autolayer(fc, series = "Forecast") +
+	autolayer(ts(test, start= length(train)), series="Test Data") +
+	xlim(0, length(oneq))
 
 
 #2019-2023
@@ -157,8 +176,8 @@ model2 <- auto.arima(train2, xreg = pib.xreg2$pib)
 fc2 <- forecast(model2, xreg = pib.xreg2$pib, h=n2)               
 
 autoplot(fc2, main = "ARIMAX Forecast ONEQ 2019-2023 with exogenous variable USA GDP") + 
-autolayer(ts(test2, start= length(train2)), series="Test Data")+
-xlim(0, length(oneq2)) 
+	autolayer(ts(test2, start= length(train2)), series="Test Data")+
+	xlim(0, length(oneq2)) 
 
 
 #2003-2023
@@ -171,13 +190,22 @@ model3 <- auto.arima(train3, xreg = pib.xreg3$pib)
 fc3 <- forecast(model3, xreg = pib.xreg3$pib, h=n3)                
 
 autoplot(fc3, main = "ARIMAX Forecast ONEQ 2003-2023 with exogenous variable USA GDP") + 
-autolayer(ts(test3, start= length(train3)), series="Test Data")+
-xlim(0, length(oneq3)) 
+	autolayer(ts(test3, start= length(train3)), series="Test Data")+
+	xlim(0, length(oneq3)) 
 ```
 
 
 
 5. RESULTS
+En esta sección se observan las líneas de código que permiten evaluar los resultados de la predicción del indicador, 
+específicamente con métricas de precisión (ME, MPE y RMSE) para el conjunto de datos de testing. 
+Cabe mencionar que estas métricas fueron calculadas para los tres periodos en estudio.
+
+Para poder realizar un cuadro comparativo entre las metricas del modelo ARIMA y el modelo ARIMAX, 
+se guardan los valores obtenidos de la función “accuracy” de su correspondiente ubicación. 
+Luego crea una base de datos que pueda cargar el cuadro comparativo.
+
+
 ```{r}
 #2009-2018
 me_low <- accuracy(fc_arima, test)["Test set", "ME"]
