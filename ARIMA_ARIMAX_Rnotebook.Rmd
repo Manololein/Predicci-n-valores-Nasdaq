@@ -82,8 +82,8 @@ names(pib3) <- c("pib")
 
 4. MODELING
 
-#ARIMA forecasting
-#2009-2018
+ARIMA forecasting
+2009-2018
 ```{r}
 n <- as.integer(nrow(oneq)/3)
 train <- head(oneq$oneq.Low, length(oneq$oneq.Low)-n)
@@ -99,7 +99,7 @@ autoplot(fc, title = "ARIMAX Forecast ONEQ 2009-2018 with exogenous variable USA
 ```
 
 
-#2019-2023
+2019-2023
 ```{r}
 n2 <- as.integer(nrow(oneq2)/3)
 train2 <- head(oneq2$oneq.Low, length(oneq2$oneq.Low)-n2)
@@ -114,7 +114,7 @@ autoplot(fc2, main = "ARIMAX Forecast ONEQ 2019-2023 with exogenous variable USA
 ```
 
 
-#2003-2023
+2003-2023
 ```{r}
 n3 <- as.integer(nrow(oneq3)/3)
 pib.xreg3 <- head(pib3$pib, length(pib3$pib)-n3)
@@ -207,8 +207,8 @@ autoplot(fc3, main = "ARIMAX Forecast ONEQ 2003-2023 with exogenous variable USA
 
 
 5. RESULTS
+2009-2018
 ```{r}
-#2009-2018
 me_low <- accuracy(fc_arima, test)["Test set", "ME"]
 mpe_low <- accuracy(fc_arima, test)["Test set", "MPE"]
 rmse_low <- accuracy(fc_arima, test)["Test set", "RMSE"]
@@ -223,9 +223,10 @@ results1 <- data.frame(Test = c("ARIMA","ARIMAX"),
                       RMSE = c(rmse_low, rmse_low2))
 
 results1
+```
 
-
-#2019-2023
+2019-2023
+```{r}
 me_low <- accuracy(fc2_arima, test2_arima)["Test set", "ME"]
 mpe_low <- accuracy(fc2_arima, test2_arima)["Test set", "MPE"]
 rmse_low <- accuracy(fc2_arima, test2_arima)["Test set", "RMSE"]
@@ -240,11 +241,12 @@ results2 <- data.frame(Test = c("ARIMA","ARIMAX"),
                        RMSE = c(rmse_low, rmse_low2))
 
 results2
+```
 
 
 
-
-#2003-2023
+2003-2023
+```{r}
 me_low <- accuracy(fc3_arima, test3_arima)["Test set", "ME"]
 mpe_low <- accuracy(fc3_arima, test3_arima)["Test set", "MPE"]
 rmse_low <- accuracy(fc3_arima, test3_arima)["Test set", "RMSE"]
