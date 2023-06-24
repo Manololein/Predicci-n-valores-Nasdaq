@@ -3,7 +3,7 @@ title: "Recuperacionnde Valores en el Indicador NASDAQ"
 output: html_notebook
 ---
 1. SETUP WORKING ENVIRONMENT
-    ```{r}
+```{r}
     install.packages("tidyverse")
     install.packages("readxl")
     install.packages("forecast")
@@ -11,7 +11,7 @@ output: html_notebook
     library(readxl)
     library(forecast)
     library(tidyverse)
-    ```
+```
 Luego se define la ubicación del espacio de trabajo
     ```{r}
     setwd("C:/Users/nafa/Documents/RStudio/DataScienceProject/Dataset")
