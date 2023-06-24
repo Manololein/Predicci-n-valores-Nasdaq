@@ -220,8 +220,6 @@ Cabe mencionar que estas métricas fueron calculadas para los tres periodos en e
 Para poder realizar un cuadro comparativo entre las metricas del modelo ARIMA y el modelo ARIMAX, 
 se guardan los valores obtenidos de la función “accuracy” de su correspondiente ubicación. 
 Luego crea una base de datos que pueda cargar el cuadro comparativo.
-
-
 ```{r}
 #2009-2018
 me_low <- accuracy(fc_arima, test)["Test set", "ME"]
