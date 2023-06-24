@@ -127,7 +127,10 @@ fc3 <- forecast(model3, h=n3)
 autoplot(fc3, main = "ARIMAX Forecast ONEQ 2003-2023 with exogenous variable USA GDP") + 
   autolayer(ts(test3, start= length(train3)), series="Test Data")+
   xlim(0, length(oneq3)) 
+```
 
+Para finalizar el modelo de ARIMA, se guardan las variables utilizadas en otras con nombres diferentes, esto para continuar utilizando los mismos nombres a continuación en el modelo ARIMAX
+```{r}
 fc_arima  <- fc
 fc2_arima <- fc2
 fc3_arima <- fc3
