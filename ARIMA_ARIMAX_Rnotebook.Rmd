@@ -3,28 +3,22 @@ title: "Recuperacionnde Valores en el Indicador NASDAQ"
 output: html_notebook
 ---
 
-Hola me llamo Manololein
-
+1. SETUP WORKING ENVIRONMENT
 ```{r}
-#1. SETUP WORKING ENVIRONMENT####-----------------------------------------------
-
 install.packages("tidyverse")
 install.packages("readxl")
 install.packages("forecast")
-
-
 
 library(readxl)
 library(forecast)
 library(tidyverse)
 
-
 setwd("C:/Users/nafa/Documents/RStudio/DataScienceProject/Dataset")
+```
 
 
-
-#2. LOAD DATASET####------------------------------------------------------------
-
+#2. LOAD DATASET
+```{r}
 #2009-2018
 df <- read_excel("ONEQ_Data2009-2018_PIB.xlsx")
 
@@ -37,14 +31,14 @@ df2 <- read_excel("ONEQ_Data2019-2023_PIB.xlsx")
 
 #2003-2023
 df3 <- read_excel("ONEQ_Data2003-2023_PIB.xlsx")
+```
 
 
 
 
 
-
-#3. DATA PRE PROCESSING####-----------------------------------------------------
-
+#3. DATA PRE PROCESSING####
+```{r}
 #2008-2018
 df$Date <- as.Date(df$Date)
 
@@ -87,6 +81,7 @@ oneq3$oneq.Low <- oneq3$oneq.Low/1000000
 
 pib3 <- xts(df3$PIB, order.by = df3$Date)
 names(pib3) <- c("pib")
+```
 
 
 
@@ -96,8 +91,8 @@ names(pib3) <- c("pib")
 
 
 
-
-#4. MODELING####----------------------------------------------------------------
+#4. MODELING
+```{r}
 #ARIMA forecasting
 #2009-2018
 n <- as.integer(nrow(oneq)/3)
@@ -202,6 +197,7 @@ fc3 <- forecast(model3, xreg = pib.xreg3$pib, h=n3)
 autoplot(fc3, main = "ARIMAX Forecast ONEQ 2003-2023 with exogenous variable USA GDP") + 
   autolayer(ts(test3, start= length(train3)), series="Test Data")+
   xlim(0, length(oneq3)) 
+```
 
 
 
@@ -214,9 +210,8 @@ autoplot(fc3, main = "ARIMAX Forecast ONEQ 2003-2023 with exogenous variable USA
 
 
 
-
-#5. RESULTS####-----------------------------------------------------------------
-
+#5. RESULTS
+```{r}
 #2009-2018
 me_low <- accuracy(fc_arima, test)["Test set", "ME"]
 mpe_low <- accuracy(fc_arima, test)["Test set", "MPE"]
