@@ -23,7 +23,6 @@ setwd("C:/Users/nafa/Documents/RStudio/DataScienceProject/Dataset")
 2. LOAD DATASET
 ```{r}
 #2009-2018
-
 df <- read_excel("ONEQ_Data2009-2018_PIB.xlsx")
 
 #2019-2023
