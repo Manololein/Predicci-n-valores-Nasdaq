@@ -12,7 +12,7 @@ output: html_notebook
     library(forecast)
     library(tidyverse)
     ```
-    Luego se define la ubicación del espacio de trabajo
+Luego se define la ubicación del espacio de trabajo
     ```{r}
     setwd("C:/Users/nafa/Documents/RStudio/DataScienceProject/Dataset")
     ```
